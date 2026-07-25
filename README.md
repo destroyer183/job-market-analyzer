@@ -1,2 +1,2 @@
-# web-scraper-project
+# job-market-analyzer
 idk
