@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Job Market Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="dashboard">
+
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-mark" aria-hidden="true">&#9670;</span>
+                <div>
+                    <h1>Job Market Analyzer</h1>
+                    <p class="subtitle">Scraped postings and tech-skill demand</p>
+                </div>
+            </div>
+            <p class="updated-chip">Last scraped <time datetime="2026-07-27">27 Jul 2026</time></p>
+        </header>
+
+        <!-- One filter row, above everything it scopes (jobs table + skills chart). -->
+        <form class="filter-row" aria-label="Filter job postings" id="filter-form">
+            <label class="field">
+                <span class="field-label">Company</span>
+                <input type="search" id="company-filter" name="company" placeholder="e.g. Acme Analytics"
+                    autocomplete="off">
+            </label>
+            <button type="submit" class="btn-primary" id="apply-filters">Apply</button>
+            <button type="reset" class="btn-ghost" id="reset-filters">Reset</button>
+        </form>
+
+        <section class="kpi-row" aria-label="Key stats">
+            <article class="stat-tile">
+                <p class="stat-label">Total postings</p>
+                <p class="stat-value" data-field="total-postings">3</p>
+            </article>
+            <article class="stat-tile">
+                <p class="stat-label">Companies tracked</p>
+                <p class="stat-value" data-field="total-companies">3</p>
+            </article>
+            <article class="stat-tile">
+                <p class="stat-label">Top skill</p>
+                <p class="stat-value" data-field="top-skill">SQL</p>
+            </article>
+            <article class="stat-tile">
+                <p class="stat-label">Skills tracked</p>
+                <p class="stat-value" data-field="skills-tracked">10</p>
+            </article>
+        </section>
+
+        <div class="main-grid">
+
+            <section class="card jobs-card" aria-labelledby="jobs-heading">
+                <div class="card-header">
+                    <h2 id="jobs-heading">Job listings</h2>
+                    <p class="card-sub">Newest scraped first</p>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Title</th>
+                                <th scope="col">Company</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">Posted</th>
+                                <th scope="col" class="col-action"><span class="visually-hidden">Apply</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="jobs-tbody">
+                            <tr>
+                                <td>Test</td>
+                                <td>Acme Analytics</td>
+                                <td>Manchester, UK</td>
+                                <td class="num"><time datetime="2026-07-20">20 Jul 2026</time></td>
+                                <td class="col-action"><a href="https://example.invalid/jobs/junior-data-engineer-1"
+                                        class="row-link">View&nbsp;&rarr;</a></td>
+                            </tr>
+                            <tr>
+                                <td>Backend Developer (Python)</td>
+                                <td>Northwind Software</td>
+                                <td>Remote</td>
+                                <td class="num"><time datetime="2026-07-22">22 Jul 2026</time></td>
+                                <td class="col-action"><a href="https://example.invalid/jobs/backend-developer-python-2"
+                                        class="row-link">View&nbsp;&rarr;</a></td>
+                            </tr>
+                            <tr>
+                                <td>Data Analyst</td>
+                                <td>Bright Retail</td>
+                                <td>Leeds, UK</td>
+                                <td class="num text-muted">&mdash;</td>
+                                <td class="col-action"><a href="https://example.invalid/jobs/data-analyst-3"
+                                        class="row-link">View&nbsp;&rarr;</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <aside class="card skills-card" aria-labelledby="skills-heading">
+                <!-- Checkbox-driven chart/table toggle -- the accessibility twin of
+             every chart, works without JavaScript. Stays a direct child of
+             <aside>, before everything below it, so the ~ selectors in
+             styles.css can reach .card-header's toggle label as well as
+             .skills-chart / .skills-table-wrap. -->
+                <input type="checkbox" id="skills-table-toggle" class="visually-hidden toggle-input">
+
+                <div class="card-header">
+                    <div class="card-header-text">
+                        <h2 id="skills-heading">Top skills</h2>
+                        <p class="card-sub">Share of postings mentioning each skill</p>
+                    </div>
+                    <div class="chart-toolbar">
+                        <label for="skills-table-toggle" class="table-toggle-label">
+                            <span class="toggle-chart-txt">Chart</span>
+                            <span class="toggle-table-txt">Table</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="skills-chart" id="skills-chart" role="img"
+                    aria-label="Bar chart of top skills by share of postings">
+                    <div class="skill-row">
+                        <span class="skill-name">test</span>
+                        <span class="skill-bar-track">
+                            <span class="skill-bar" style="width: 100%;" title="SQL — 2 of 3 postings (66.7%)"></span>
+                        </span>
+                        <span class="skill-value">66.7%</span>
+                    </div>
+                    <div class="skill-row">
+                        <span class="skill-name">Python</span>
+                        <span class="skill-bar-track">
+                            <span class="skill-bar" style="width: 50%;" title="Python — 1 of 3 postings (33.3%)"></span>
+                        </span>
+                        <span class="skill-value">33.3%</span>
+                    </div>
+                    <div class="skill-row">
+                        <span class="skill-name">FastAPI</span>
+                        <span class="skill-bar-track">
+                            <span class="skill-bar" style="width: 50%;"
+                                title="FastAPI — 1 of 3 postings (33.3%)"></span>
+                        </span>
+                        <span class="skill-value">33.3%</span>
+                    </div>
+                    <div class="skill-row">
+                        <span class="skill-name">PostgreSQL</span>
+                        <span class="skill-bar-track">
+                            <span class="skill-bar" style="width: 50%;"
+                                title="PostgreSQL — 1 of 3 postings (33.3%)"></span>
+                        </span>
+                        <span class="skill-value">33.3%</span>
+                    </div>
+                </div>
+
+                <div class="skills-table-wrap">
+                    <table>
+                        <caption class="visually-hidden">Top skills by share of postings</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Skill</th>
+                                <th scope="col">Postings</th>
+                                <th scope="col">Share</th>
+                            </tr>
+                        </thead>
+                        <tbody id="skills-tbody">
+                            <tr>
+                                <td>SQL</td>
+                                <td class="num">2</td>
+                                <td class="num">66.7%</td>
+                            </tr>
+                            <tr>
+                                <td>Python</td>
+                                <td class="num">1</td>
+                                <td class="num">33.3%</td>
+                            </tr>
+                            <tr>
+                                <td>FastAPI</td>
+                                <td class="num">1</td>
+                                <td class="num">33.3%</td>
+                            </tr>
+                            <tr>
+                                <td>PostgreSQL</td>
+                                <td class="num">1</td>
+                                <td class="num">33.3%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </aside>
+
+        </div>
+
+        <footer class="footer">
+            <p>API reference at <a href="/docs">/docs</a> &middot; FastAPI + SQLAlchemy + Polars</p>
+        </footer>
+
+    </div>
+
+    <script type="module" src="app.js" defer></script>
+    <!-- app.js (compiled from app.ts) wires this markup to /api/jobs and
+       /api/skills/top and replaces the sample rows above with live data. -->
+</body>
+
+</html>

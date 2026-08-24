@@ -1,0 +1,446 @@
+/* Job Market Analyzer — dashboard styles.
+   Design tokens follow the project's dataviz palette: chart chrome + ink
+   roles in light mode, restepped for dark under prefers-color-scheme. */
+
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --border: rgba(11, 11, 11, 0.10);
+  --gridline: #e1e0d9;
+  --baseline: #c3c2b7;
+
+  /* Sequential blue — magnitude, not identity, so one hue only. */
+  --series-1: #2a78d6;
+  --series-1-track: #e3edfa;
+
+  --radius-card: 12px;
+  --radius-control: 8px;
+  --shadow-card: 0 1px 2px rgba(11, 11, 11, 0.04), 0 4px 12px rgba(11, 11, 11, 0.04);
+  --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --border: rgba(255, 255, 255, 0.10);
+    --gridline: #2c2c2a;
+    --baseline: #383835;
+
+    --series-1: #3987e5;
+    --series-1-track: #1f3a5c;
+
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.30), 0 4px 16px rgba(0, 0, 0, 0.30);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--series-1);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.dashboard {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---------- Header ---------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-mark {
+  font-size: 22px;
+  color: var(--series-1);
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.updated-chip {
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* ---------- Filter row ---------- */
+/* A single row above everything it scopes — never per-card filters. */
+
+.filter-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 220px;
+}
+
+.field-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.field input {
+  font: inherit;
+  padding: 9px 12px;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.field input:focus-visible,
+button:focus-visible,
+a:focus-visible,
+.toggle-input:focus-visible ~ .card-header .table-toggle-label {
+  outline: 2px solid var(--series-1);
+  outline-offset: 2px;
+}
+
+.btn-primary,
+.btn-ghost {
+  font: inherit;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+
+.btn-primary {
+  border: 1px solid var(--series-1);
+  background: var(--series-1);
+  color: #ffffff;
+}
+
+.btn-ghost {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+/* ---------- KPI row ---------- */
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.stat-tile {
+  padding: 18px 20px;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.stat-label {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.stat-value {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 650;
+  /* Proportional figures on display-size numbers -- tabular-nums is only
+     for columns that must align vertically. */
+}
+
+/* ---------- Main grid ---------- */
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.card {
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  padding: 20px 20px 8px;
+}
+
+.card-header {
+  padding-bottom: 12px;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.card-sub {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Skills card only: title+subtitle on the left, chart/table toggle on the
+   right, one row. (Scoped here rather than on .card-header generally --
+   the jobs card's header has no toolbar and needs its title to stay
+   stacked over its subtitle, not pushed onto the same row.) */
+.skills-card .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card-header-text {
+  min-width: 0; /* lets the title truncate instead of forcing the row to overflow */
+}
+
+/* ---------- Jobs table ---------- */
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--gridline);
+  font-size: 14px;
+}
+
+th {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Dates align vertically down a column, so they get tabular figures --
+   unlike the stat-tile / hero values above. */
+td.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.col-action {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.row-link {
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.row-link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Skills chart ---------- */
+
+.chart-toolbar {
+  flex-shrink: 0; /* keep the toggle its own size if the title ever gets long */
+}
+
+.table-toggle-label {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+
+.table-toggle-label span {
+  padding: 5px 12px;
+  color: var(--text-secondary);
+}
+
+.toggle-chart-txt {
+  background: var(--series-1-track);
+  color: var(--series-1);
+}
+
+.skills-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 0 16px;
+}
+
+.skill-row {
+  display: grid;
+  grid-template-columns: 84px 1fr 46px;
+  align-items: center;
+  gap: 10px;
+}
+
+.skill-name {
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.skill-bar-track {
+  position: relative;
+  height: 12px;
+}
+
+.skill-bar {
+  display: block;
+  height: 12px;
+  max-width: 100%;
+  background: var(--series-1);
+  border-radius: 4px;
+  /* Square at the baseline (left), rounded data-end at the tip (right) --
+     the fixed border-radius above already rounds all corners at 4px, which
+     reads correctly at this thickness; only the tip needs the round. */
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.skill-value {
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* Table-view twin, hidden until the toggle is checked. Pure CSS -- no JS
+   required for this accessibility control. */
+.skills-table-wrap {
+  display: none;
+  padding-bottom: 12px;
+}
+
+.toggle-input:checked ~ .skills-chart {
+  display: none;
+}
+
+.toggle-input:checked ~ .skills-table-wrap {
+  display: block;
+}
+
+.toggle-input:checked ~ .card-header .toggle-chart-txt {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.toggle-input:checked ~ .card-header .toggle-table-txt {
+  background: var(--series-1-track);
+  color: var(--series-1);
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 860px) {
+  .kpi-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .kpi-row {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-row {
+    grid-template-columns: 70px 1fr 42px;
+  }
+}

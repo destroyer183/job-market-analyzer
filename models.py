@@ -97,3 +97,19 @@ class JobPostingRead(JobPostingBase):
     id: int
     url: str
     scraped_at: datetime
+
+
+class SkillFrequency(BaseModel):
+    """One tracked skill's mention frequency across stored postings.
+
+    Produced by :func:`processor.get_top_skills`, not persisted anywhere.
+    """
+
+    skill: str
+    #: Distinct postings mentioning the skill at least once.
+    posting_count: int = Field(..., ge=0)
+    #: posting_count as a percentage of postings that have a description.
+    percentage: float = Field(..., ge=0, le=100)
+    #: Total occurrences, which can exceed posting_count if a description
+    #: repeats a skill.
+    mention_count: int = Field(..., ge=0)
