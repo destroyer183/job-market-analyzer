@@ -40,6 +40,7 @@ async function loadJobs(): Promise<void> {
     console.log("jobs: ", jobs);
 
     renderJobListings(jobs);
+    renderJobKeyStats(jobs);
 }
 
 
@@ -63,6 +64,7 @@ async function loadSkills(): Promise<void> {
 
     renderSkillsChart(skills);
     renderSkillsTable(skills);
+    renderSkillKeyStats(skills);
 }
 
 
@@ -141,6 +143,17 @@ function renderJobListings(jobs: JobPosting[]) {
 
 
 
+function renderJobKeyStats(jobs: JobPosting[]) {
+
+    document.querySelector("[data-field='total-postings']")!.textContent = String(jobs.length);
+
+    let uniqueCompanies: Set<string> = new Set(jobs.map(j => j.company));
+
+    document.querySelector("[data-field='total-companies']")!.textContent = String(uniqueCompanies.size);
+}
+
+
+
 function renderSkillsChart(skills: SkillFrequency[]) {
 
     // get skills chart element as a variable
@@ -195,6 +208,46 @@ function renderSkillsChart(skills: SkillFrequency[]) {
 function renderSkillsTable(skills: SkillFrequency[]) {
 
     // create this during the next coding session
+    const skillsTable: HTMLTableElement = <HTMLTableElement>document.getElementById("skills-tbody");
+
+    let newSkills: HTMLTableRowElement[] = [];
+
+    for (let newSkill of skills) {
+
+        const skillRow: HTMLTableRowElement = document.createElement("tr");
+
+
+        const skillName: HTMLTableCellElement = document.createElement("td");
+        skillName.textContent = newSkill.skill;
+
+
+        const skillPostings: HTMLTableCellElement = document.createElement("td");
+        skillPostings.classList.add("num");
+        skillPostings.textContent = String(newSkill.posting_count);
+
+
+        const skillPercentage: HTMLTableCellElement = document.createElement("td");
+        skillPercentage.classList.add("num");
+        skillPercentage.textContent = String(newSkill.percentage);
+
+
+        skillRow.appendChild(skillName);
+        skillRow.appendChild(skillPostings);
+        skillRow.appendChild(skillPercentage);
+
+        newSkills.push(skillRow);
+    }
+
+    skillsTable.replaceChildren(...newSkills);
+}
+
+
+
+function renderSkillKeyStats(skills: SkillFrequency[]) {
+
+    document.querySelector("[data-field='top-skill']")!.textContent = String(skills[0]!.skill);
+
+    document.querySelector("[data-field='skills-tracked']")!.textContent = String(skills.length);
 }
 
 

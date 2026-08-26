@@ -36,19 +36,19 @@
         <section class="kpi-row" aria-label="Key stats">
             <article class="stat-tile">
                 <p class="stat-label">Total postings</p>
-                <p class="stat-value" data-field="total-postings">3</p>
+                <p class="stat-value" data-field="total-postings">4</p>
             </article>
             <article class="stat-tile">
                 <p class="stat-label">Companies tracked</p>
-                <p class="stat-value" data-field="total-companies">3</p>
+                <p class="stat-value" data-field="total-companies">4</p>
             </article>
             <article class="stat-tile">
                 <p class="stat-label">Top skill</p>
-                <p class="stat-value" data-field="top-skill">SQL</p>
+                <p class="stat-value" data-field="top-skill">Placeholder</p>
             </article>
             <article class="stat-tile">
                 <p class="stat-label">Skills tracked</p>
-                <p class="stat-value" data-field="skills-tracked">10</p>
+                <p class="stat-value" data-field="skills-tracked">9</p>
             </article>
         </section>
 
@@ -59,6 +59,13 @@
                     <h2 id="jobs-heading">Job listings</h2>
                     <p class="card-sub">Newest scraped first</p>
                 </div>
+
+                <!-- Row-limit checkbox: same CSS-only pattern as the chart/table
+             toggle above. Must stay a direct child of .jobs-card, before
+             .table-wrap and the label below, for the ~ selectors in
+             styles.css to reach both. -->
+                <input type="checkbox" id="jobs-expand-toggle" class="visually-hidden toggle-input">
+
                 <div class="table-wrap">
                     <table>
                         <thead>
@@ -72,7 +79,7 @@
                         </thead>
                         <tbody id="jobs-tbody">
                             <tr>
-                                <td>Test</td>
+                                <td>Placeholder</td>
                                 <td>Acme Analytics</td>
                                 <td>Manchester, UK</td>
                                 <td class="num"><time datetime="2026-07-20">20 Jul 2026</time></td>
@@ -98,6 +105,11 @@
                         </tbody>
                     </table>
                 </div>
+
+                <label for="jobs-expand-toggle" class="expand-toggle-label">
+                    <span class="expand-more-txt">Show more</span>
+                    <span class="expand-less-txt">Show less</span>
+                </label>
             </section>
 
             <aside class="card skills-card" aria-labelledby="skills-heading">
@@ -107,6 +119,10 @@
              styles.css can reach .card-header's toggle label as well as
              .skills-chart / .skills-table-wrap. -->
                 <input type="checkbox" id="skills-table-toggle" class="visually-hidden toggle-input">
+                <!-- Row-limit checkbox: same CSS-only pattern, a second
+             independent toggle so switching Chart/Table doesn't reset
+             whether the list is expanded. -->
+                <input type="checkbox" id="skills-expand-toggle" class="visually-hidden toggle-input">
 
                 <div class="card-header">
                     <div class="card-header-text">
@@ -124,7 +140,7 @@
                 <div class="skills-chart" id="skills-chart" role="img"
                     aria-label="Bar chart of top skills by share of postings">
                     <div class="skill-row">
-                        <span class="skill-name">test</span>
+                        <span class="skill-name">Placeholder</span>
                         <span class="skill-bar-track">
                             <span class="skill-bar" style="width: 100%;" title="SQL — 2 of 3 postings (66.7%)"></span>
                         </span>
@@ -167,7 +183,7 @@
                         </thead>
                         <tbody id="skills-tbody">
                             <tr>
-                                <td>SQL</td>
+                                <td>Placeholder</td>
                                 <td class="num">2</td>
                                 <td class="num">66.7%</td>
                             </tr>
@@ -189,6 +205,11 @@
                         </tbody>
                     </table>
                 </div>
+
+                <label for="skills-expand-toggle" class="expand-toggle-label">
+                    <span class="expand-more-txt">Show more</span>
+                    <span class="expand-less-txt">Show less</span>
+                </label>
             </aside>
 
         </div>

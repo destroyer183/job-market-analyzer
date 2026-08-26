@@ -160,7 +160,9 @@ a {
 .field input:focus-visible,
 button:focus-visible,
 a:focus-visible,
-.toggle-input:focus-visible ~ .card-header .table-toggle-label {
+#skills-table-toggle:focus-visible ~ .card-header .table-toggle-label,
+#jobs-expand-toggle:focus-visible ~ .expand-toggle-label,
+#skills-expand-toggle:focus-visible ~ .expand-toggle-label {
   outline: 2px solid var(--series-1);
   outline-offset: 2px;
 }
@@ -396,22 +398,98 @@ td.num {
   padding-bottom: 12px;
 }
 
-.toggle-input:checked ~ .skills-chart {
+#skills-table-toggle:checked ~ .skills-chart {
   display: none;
 }
 
-.toggle-input:checked ~ .skills-table-wrap {
+#skills-table-toggle:checked ~ .skills-table-wrap {
   display: block;
 }
 
-.toggle-input:checked ~ .card-header .toggle-chart-txt {
+#skills-table-toggle:checked ~ .card-header .toggle-chart-txt {
   background: transparent;
   color: var(--text-secondary);
 }
 
-.toggle-input:checked ~ .card-header .toggle-table-txt {
+#skills-table-toggle:checked ~ .card-header .toggle-table-txt {
   background: var(--series-1-track);
   color: var(--series-1);
+}
+
+/* ---------- Row limit / "Show more" ---------- */
+/* Same checkbox-driven, no-JS pattern as the chart/table toggle above.
+   Caps each list at 4 rows and reveals the rest on click; re-evaluates
+   automatically whenever the render functions add or remove rows, so
+   there's nothing to keep in sync from app.ts. IDs, not the shared
+   .toggle-input class, drive all of this -- with two checkboxes now
+   sharing that class per card, a class-based :checked selector would
+   fire for either one. */
+
+#jobs-tbody tr:nth-child(n + 5) {
+  display: none;
+}
+
+#jobs-expand-toggle:checked ~ .table-wrap #jobs-tbody tr:nth-child(n + 5) {
+  display: table-row;
+}
+
+#skills-chart .skill-row:nth-child(n + 5) {
+  display: none;
+}
+
+#skills-expand-toggle:checked ~ #skills-chart .skill-row:nth-child(n + 5) {
+  display: grid;
+}
+
+#skills-tbody tr:nth-child(n + 5) {
+  display: none;
+}
+
+#skills-expand-toggle:checked ~ .skills-table-wrap #skills-tbody tr:nth-child(n + 5) {
+  display: table-row;
+}
+
+.expand-toggle-label {
+  /* Hidden by default -- shown only when a 5th row actually exists,
+     via the :has() rules below. A "Show more" button with nothing to
+     reveal is worse than no button at all. */
+  display: none;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px;
+  border: none;
+  border-top: 1px solid var(--gridline);
+  background: transparent;
+  color: var(--series-1);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.expand-toggle-label:hover {
+  color: var(--text-primary);
+}
+
+.jobs-card:has(#jobs-tbody tr:nth-child(5)) .expand-toggle-label,
+.skills-card:has(#skills-chart .skill-row:nth-child(5)) .expand-toggle-label {
+  display: block;
+}
+
+.expand-toggle-label .expand-less-txt {
+  display: none;
+}
+
+#jobs-expand-toggle:checked ~ .expand-toggle-label .expand-more-txt,
+#skills-expand-toggle:checked ~ .expand-toggle-label .expand-more-txt {
+  display: none;
+}
+
+#jobs-expand-toggle:checked ~ .expand-toggle-label .expand-less-txt,
+#skills-expand-toggle:checked ~ .expand-toggle-label .expand-less-txt {
+  display: inline;
 }
 
 /* ---------- Footer ---------- */
