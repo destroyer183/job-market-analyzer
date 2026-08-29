@@ -1,4 +1,11 @@
-console.log("app.ts loaded");
+
+
+
+document.getElementById("filter-form")!.addEventListener("submit", function(event) {
+    event.preventDefault();
+    searchCompanies();
+});
+document.getElementById("reset-filters")!.addEventListener("click", function() {loadJobs();});
 
 
 
@@ -22,9 +29,11 @@ interface SkillFrequency {
 
 
 
-async function getJobData(): Promise<JobPosting[]> {
+async function getJobData(company?: string): Promise<JobPosting[]> {
 
-    const response = await fetch("/api/jobs");
+    const url = company ? `/api/jobs?company=${encodeURIComponent(company)}` : "/api/jobs";
+
+    const response = await fetch(url);
 
     if (!response.ok) throw new Error(`Request failed: ${response.status}`);
 
@@ -252,7 +261,24 @@ function renderSkillKeyStats(skills: SkillFrequency[]) {
 
 
 
+async function searchCompanies(): Promise<void> {
+
+    const input: HTMLInputElement = <HTMLInputElement>document.getElementById("company-filter");
+    const company: string = input.value.trim();
+
+    const jobs = await getJobData(company || undefined);
+
+    renderJobListings(jobs);
+    renderJobKeyStats(jobs);
+}
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
     loadJobs();
     loadSkills();
 });
+
+
+
+console.log("app.ts loaded");
