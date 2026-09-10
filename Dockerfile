@@ -1,9 +1,11 @@
+
 # ---------- Stage 1: compile the TypeScript frontend ----------
 # Only this stage needs Node -- its entire job is turning app.ts into
 # app.js. Nothing else from here makes it into the final image; the whole
 # node_modules tree this stage builds gets discarded along with it.
 FROM node:20-slim AS frontend-build
 
+# this works like 'cd' but will also create the directory if it doesn't exist.
 WORKDIR /app
 
 # Bring in the whole static/ directory: app.ts, tsconfig.json, package.json,
@@ -50,6 +52,18 @@ COPY --from=frontend-build /app/static/app.js /app/static/app.js.map ./static/
 
 EXPOSE 8000
 
-# No --reload (dev-only) and an explicit 0.0.0.0 -- uvicorn's default
-# 127.0.0.1 only accepts connections from inside the container itself.
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# No persistent volume on Render's free tier -- jobs.db lives on the
+# container's own ephemeral disk, so it's gone on every restart/redeploy,
+# not just its rows. Re-running the scraper on each boot is what
+# repopulates it; `;` (not `&&`) means a scraper hiccup still lets the API
+# come up rather than blocking startup entirely.
+#
+# Shell form (not exec-form JSON) is required here for two reasons: `;` is
+# a shell operator, and $PORT needs shell expansion -- Render assigns its
+# own port via that env var rather than letting you hardcode one.
+# ${PORT:-8000} falls back to 8000 when it's unset, which keeps `docker run`
+# working unchanged locally. `exec` hands uvicorn the shell's own PID, so
+# it receives the platform's shutdown signal directly instead of the shell
+# swallowing it -- without it, restarts/redeploys would shut down slower
+# and less cleanly.
+CMD ["sh", "-c", "python scraper.py; exec uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
