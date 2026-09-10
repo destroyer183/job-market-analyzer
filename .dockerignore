@@ -1,0 +1,39 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Database -- never bake dev/test data into an image layer
+*.db
+*.db-wal
+*.db-shm
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Frontend build output -- critical: a locally-compiled app.js sitting here
+# must never leak into the build context. If it did, `COPY . .` in the
+# Dockerfile could silently smuggle in a stale local build and mask a
+# genuinely broken frontend-build stage -- the image would "work" only on
+# a machine that happened to have already run `tsc` by hand.
+static/*.js
+static/*.js.map
+node_modules/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Version control and local tooling -- irrelevant at runtime, and .git/ can
+# be large and carries full history (including anything ever committed and
+# later removed, e.g. old .env contents from before it was untracked)
+.git/
+.claude/
